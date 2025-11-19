@@ -38,6 +38,9 @@ Cart
       <td>{{items.product.price}}</td>
        
       <td>
+        <a href="{% url 'order_now' %}" class="btn btn-success">
+        Order Now
+    </a>
       <a href="{% url 'delete_cart_items' items.id %}" class="btn btn-danger">Delete</a></td>
 
     </tr>
@@ -46,10 +49,5 @@ Cart
 </table>
 
          <!-- table end -->
-    <div class="d-grid col-md-4 mx-auto mt-5">
-    <a href="{% url 'order_now' %}" class="btn btn-success btn-lg fw-bold shadow-lg">
-        Order Now
-    </a>
-</div>
     </div>
 {% endblock %}
