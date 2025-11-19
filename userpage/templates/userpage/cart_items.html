@@ -1,0 +1,55 @@
+{% extends 'userlayout.html' %}
+
+{% block title %}
+Cart
+{% endblock %}
+
+{% block content %}
+    <div class="container-fluid m-xl-2">
+      <h1 class="text-center text-muted mt-4">Cart Items</h1>
+     {% for msg in messages %}
+         {% if msg.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
+                <div class="alert alert-success" role="alert">
+                    {{msg}}
+                </div>
+                {% endif %}
+            {% endfor %}
+       
+        <!-- table start -->
+         <table class="table table-striped">
+  <thead>
+    <tr>
+    
+      <th scope="col">Image</th>
+      <th scope="col">Username</th>
+      <th scope="col">Product Name</th>
+      <th scope="col">Price</th>
+      <th scope="col">Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for items in cart%}
+    <tr  >
+  
+      <td><img src="{{items.product.image.url}}" alt="{{items.product_name}}" width="100px" height="100px"> </td>
+      <td>{{items.user.username}}</td>
+      <td>{{items.product.product_name}}</td>
+      
+      <td>{{items.product.price}}</td>
+       
+      <td>
+      <a href="{% url 'delete_cart_items' items.id %}" class="btn btn-danger">Delete</a></td>
+
+    </tr>
+    {% endfor%}
+  </tbody>
+</table>
+
+         <!-- table end -->
+    <div class="d-grid col-md-4 mx-auto mt-5">
+    <a href="{% url 'order_now' %}" class="btn btn-success btn-lg fw-bold shadow-lg">
+        Order Now
+    </a>
+</div>
+    </div>
+{% endblock %}
