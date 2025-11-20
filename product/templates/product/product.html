@@ -7,9 +7,6 @@ Admin || Products
 {% block content %}
     <div class="container-fluid m-xl-2">
       <h1 class="text-center text-muted mt-4">All Products</h1>
-    <!-- <div class="d-flex justify-content-end me-4">
-      <a href="{% url 'add_product'  %}" class="btn btn-primary">Add Product</a>
-    </div> --> 
      {% for msg in messages %}
               
                 {% if msg.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}

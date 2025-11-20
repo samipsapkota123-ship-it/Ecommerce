@@ -1,0 +1,110 @@
+{% extends 'userlayout.html' %}
+
+{% block title %}
+Order History
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid m-xl-2">
+
+  <h1 class="text-center text-muted mt-4">Your Order History</h1>
+
+  {% for msg in messages %}
+    {% if msg.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
+      <div class="alert alert-success">{{ msg }}</div>
+    {% endif %}
+  {% endfor %}
+
+  <!-- Modern Table Start -->
+  <div class="table-responsive mt-4">
+    <table class="table table-hover align-middle shadow-sm">
+
+      <thead class="table-dark">
+        <tr>
+          <th>Product Name</th>
+          <th>Product Image</th>
+          <th>Description</th>
+          <th>Quantity</th>
+          <th>Price</th>
+          <th>Total</th>
+          <th>Payment Status</th>
+          <th>Order Status</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        {% for items in orders %}
+        <tr>
+
+          <td>{{ items.product.product_name }}</td>
+
+          <td>
+            <img src="{{ items.product.image.url }}" alt="{{ items.product_name }}"
+                 width="90" height="90" class="rounded shadow-sm">
+          </td>
+
+          <td style="max-width: 250px;">
+            <span class="text-muted small">
+              {{ items.product.description }}
+            </span>
+          </td>
+
+          <td>{{ items.quantity }}</td>
+
+          <td>Rs {{ items.product.price }}</td>
+
+          <td class="fw-bold">Rs {{ items.total_price }}</td>
+
+          <!-- Payment Status Badge -->
+          <td class="text-center">
+            <span class="badge rounded-pill px-3 py-2
+              {% if items.payment_status == 'pending' %}
+                text-bg-warning
+              {% else %}
+                text-bg-success
+              {% endif %}
+            ">
+              {% if items.payment_status == 'pending' %}
+                <i class="bi bi-clock me-1"></i>
+              {% else %}
+                <i class="bi bi-check-circle me-1"></i>
+              {% endif %}
+              {{ items.payment_status|title }}
+            </span>
+          </td>
+
+          <!-- Order Status Badge -->
+          <td class="text-center">
+            <span class="badge rounded-pill px-3 py-2
+              {% if items.order_status == 'pending' %}
+                text-bg-warning
+              {% elif items.order_status == 'cancelled' %}
+                text-bg-danger
+              {% elif items.order_status == 'delivered' %}
+                text-bg-success
+              {% else %}
+                text-bg-secondary
+              {% endif %}
+            ">
+              {% if items.order_status == 'pending' %}
+                <i class="bi bi-hourglass-split me-1"></i>
+              {% elif items.order_status == 'cancelled' %}
+                <i class="bi bi-x-circle me-1"></i>
+              {% elif items.order_status == 'delivered' %}
+                <i class="bi bi-truck me-1"></i>
+              {% else %}
+                <i class="bi bi-info-circle me-1"></i>
+              {% endif %}
+              {{ items.order_status|title }}
+            </span>
+          </td>
+
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <!-- Modern Table End -->
+
+</div>
+{% endblock %}

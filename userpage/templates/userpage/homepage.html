@@ -1,12 +1,23 @@
 {% extends 'userlayout.html' %}
 {% load static %}
-{% block title%}
+{% block title %}
 Homepage
 {% endblock %}
 
 {% block content %}
- <!-- carousel start -->
-         <div id="carouselExample" class="carousel slide">
+
+<style>
+.product-img {
+    height: 220px;              
+    width: 100%;
+    object-fit: cover;         
+    border-top-left-radius: .5rem;
+    border-top-right-radius: .5rem;
+}
+</style>
+
+<!--CAROUSEL-->
+<div id="carouselExample" class="carousel slide">
   <div class="carousel-inner">
     <div class="carousel-item active">
       <img src="{% static 'images/Women.jpg' %}" class="d-block w-100" alt="...">
@@ -18,36 +29,46 @@ Homepage
       <img src="{% static 'images/laptop.jpg' %}" class="d-block w-100" alt="...">
     </div>
   </div>
+
   <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
-    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+    <span class="carousel-control-prev-icon"></span>
     <span class="visually-hidden">Previous</span>
   </button>
+
   <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
-    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+    <span class="carousel-control-next-icon"></span>
     <span class="visually-hidden">Next</span>
   </button>
 </div>
-         <!-- carousel end -->
+<!--CAROUSEL END-->
 
-<!-- latestproduct -->
- <div class="'container-fluid p-4">
-    <h3 class="text-muted my-2">Latest Product</h3>
- </div>
- <div class="row row-cols-1 row-cols-md-4 g-4">
-  {% for items in products %}
-  <div class="col">
-    
-    <div class="card">
-      <img src="{{items.image.url}}" class="card-img-top" alt="...">
-      <div class="card-body">
-        <h5 class="card-title">{{items.product_name}}</h5>
-        <p class="card-text">{{items.description}}</p>
-        <a href="{% url 'product_detial' items.id %}" class="btn btn-warning">Veiw Detials</a>
+
+<!--Latest Products -->
+<div class="container p-4 mt-3">
+  <h3 class="text-muted text-center">Latest Products</h3>
+
+  <div class="row row-cols-1 row-cols-md-4 g-4 mt-2">
+    {% for items in products %}
+    <div class="col">
+      <div class="card h-100 shadow-sm">
+
+        <img src="{{ items.image.url }}" class="product-img" alt="{{ items.product_name }}">
+
+        <div class="card-body d-flex flex-column">
+          <h5 class="card-title">{{ items.product_name }}</h5>
+
+          <p class="card-text">{{ items.description|truncatechars:80 }}</p>
+
+          <a href="{% url 'product_detial' items.id %}" class="btn btn-warning mt-auto">
+            View Details
+          </a>
+        </div>
+
       </div>
     </div>
-    
+    {% endfor %}
   </div>
-  {% endfor %}
 </div>
- <!-- latestproduct end -->
+<!-- ================= Latest Products END ================= -->
+
 {% endblock %}

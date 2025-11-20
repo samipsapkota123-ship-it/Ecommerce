@@ -1,38 +1,45 @@
 {% extends 'base.html' %}
 {% load crispy_forms_tags %}
 
-
-
 {% block title %}
 Login
 {% endblock %}
 
 {% block content %}
-    <div class="container">
-        <h1 class="text-center text-muted mt-2">Login</h1>
-        {% for msg in messages %}
-                {% if msg.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
-                <div class="alert alert-danger" role="alert">
-                    {{msg}}
+
+<div class="container py-5">
+
+    <h1 class="text-center text-muted mb-4">Login</h1>
+
+    <!-- Messages -->
+    {% for msg in messages %}
+        {% if msg.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
+            <div class="alert alert-danger text-center">{{ msg }}</div>
+        {% elif msg.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
+            <div class="alert alert-success text-center">{{ msg }}</div>
+        {% endif %}
+    {% endfor %}
+
+    <!-- Login Form Card -->
+    <div class="d-flex justify-content-center">
+        <div class="col-md-5 shadow-lg p-4 rounded bg-white">
+
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                {{ form|crispy }}
+
+                <div class="d-grid mt-3">
+                    <input class="btn btn-primary" type="submit" value="Login">
                 </div>
-                {% endif %}
-                {% if msg.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
-                <div class="alert alert-success" role="alert">
-                    {{msg}}
-                </div>
-                {% endif %}
-            {% endfor %}
-        <div class="d-flex justify-content-center">
-            <div class="col-md-5 shadow-lg p-3">
-                <form method="post" enctype="multipart/form-data">
-                    {% csrf_token %}
-                    {{form|crispy}}
-                <input class="btn btn-primary mt-2" type="submit" value="Login">
-                </form>
-                <p class="mt-1">
-                    Don't have an account?<span><a href="{% url 'register' %}" class="text-decoration-none">Register</a><span> 
-                </p>
-            </div>
+            </form>
+
+            <p class="text-center mt-3 mb-0">
+                Don't have an account? 
+                <a href="{% url 'register' %}" class="text-decoration-none fw-semibold">Register</a>
+            </p>
+
         </div>
     </div>
+</div>
+
 {% endblock %}

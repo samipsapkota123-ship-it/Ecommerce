@@ -1,30 +1,65 @@
 {% extends 'userlayout.html' %}
 {% load static %}
-{% block title%}
+
+{% block title %}
 Products
 {% endblock %}
 
 {% block content %}
 
-<!-- latestproduct -->
- <div class="'container-fluid p-4">
-    <h3 class="text-muted my-2 text-center">All Products</h3>
- </div>
- <div class="row row-cols-1 row-cols-md-4 g-4">
-  {% for items in products %}
-  <div class="col">
-    
-    <div class="card">
-      <img src="{{items.image.url}}" class="card-img-top" alt="...">
-      <div class="card-body">
-        <h5 class="card-title">{{items.product_name}}</h5>
-        <p class="card-text">{{items.description}}</p>
-        <a href="{% url 'product_detial' items.id %}" class="btn btn-warning">Veiw Detials</a>
-      </div>
-    </div>
-    
-  </div>
-  {% endfor %}
+<!-- Page Title -->
+<div class="container-fluid p-4">
+  <h3 class="text-muted my-3 text-center">All Products</h3>
 </div>
- <!-- latestproduct end -->
+
+<!-- Product Grid -->
+<div class="container">
+  <div class="row row-cols-1 row-cols-md-4 g-4">
+
+    {% for items in products %}
+    <div class="col">
+
+      <div class="card h-100 shadow-sm border-0 product-card">
+        
+        <!-- Product Image -->
+        <div class="ratio ratio-4x3">
+          <img src="{{ items.image.url }}" class="card-img-top object-fit-cover rounded-top" alt="{{ items.product_name }}">
+        </div>
+
+        <!-- Card Body -->
+        <div class="card-body">
+          <h5 class="card-title fw-semibold">{{ items.product_name }}</h5>
+
+          <p class="card-text text-muted small" style="min-height: 60px;">
+            {{ items.description|truncatechars:90 }}
+          </p>
+
+          <a href="{% url 'product_detial' items.id %}" class="btn btn-dark w-100">
+            View Details
+          </a>
+        </div>
+
+      </div>
+
+    </div>
+    {% endfor %}
+
+  </div>
+</div>
+
+<!-- Modern Hover Effect -->
+<style>
+  .product-card {
+    transition: all 0.3s ease;
+    border-radius: 10px;
+  }
+  .product-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+  }
+  .object-fit-cover {
+    object-fit: cover;
+  }
+</style>
+
 {% endblock %}
