@@ -3,7 +3,10 @@ from .models import Product,Category
 from .forms import CategoryForm,ProductForm
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.contrib.admin.views.decorators import staff_member_required
 from Accounts.auth import admin_only
+from userpage.models import Order
+from django.contrib.auth.models import User
 
 @login_required
 @admin_only
@@ -122,8 +125,42 @@ def delete_category(request,category_id):
     messages.add_message(request,messages.SUCCESS,'Category is deleted permanantly.')
     return redirect('category')
 
+@login_required
+@admin_only
+def order_status(request):
+   orders =Order.objects.all().order_by("-id")
+   return render(request,"product/order.html",{
+      'orders':orders
+   })
+@login_required
+@admin_only
+def update_order_status(request, order_id, action):
+    
+    order =Order.objects.get(id=order_id)
+
+    if action == 'delivered':
+        order.order_status = 'delivered'
+        order.payment_status = 'completed'
+    elif action == 'cancel':
+        order.order_status = 'cancelled'
+
+        
+    else:
+        
+        return redirect('order_status')
+
+    order.save()
+    return redirect('order_status')
 
 
+@login_required
+@staff_member_required
+
+def customer_list(request):
+    customers=User.objects.filter(is_staff=False)
+    return render(request,"product/customer.html",{
+      'customers':customers
+   })
 
 # form
 # get => show date to client => form

@@ -9,5 +9,6 @@ urlpatterns=[
     path('show_cart_items/',views.show_cart_items,name="show_cart_items"),
     path('delete_cart_items/<int:cart_id>',views.delete_cart_items,name='delete_cart_items'),
     path('order_now/<int:cart_id>/<int:product_id>',views.order_now,name="order_now"),
-    path('order_history/',views.order_history,name="order_history")
+    path('order_history/',views.order_history,name="order_history"),
+    path('esewa_form/',views.EsewaView.as_view(),name='esewa_form'),
 ]

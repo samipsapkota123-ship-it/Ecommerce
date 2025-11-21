@@ -5,50 +5,65 @@ Admin || Products
 {% endblock %}
 
 {% block content %}
-    <div class="container-fluid m-xl-2">
-      <h1 class="text-center text-muted mt-4">All Products</h1>
-     {% for msg in messages %}
-              
-                {% if msg.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
-                <div class="alert alert-success" role="alert">
-                    {{msg}}
-                </div>
-                {% endif %}
-            {% endfor %}
-        <!-- table start -->
-         <table class="table table-striped">
-  <thead>
-    <tr>
-    
-      <th scope="col">Product Name</th>
-      <th scope="col">Product Image</th>
-      <th scope="col">Description</th>
-      <th scope="col">Price</th>
-      <th scope="col">Category</th>
-      <th scope="col">Actions</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for items in products%}
-    <tr>
-  
-      <td>{{items.product_name}}</td>
-      {% if items.image %}
-      <td><img src="{{items.image.url}}" alt="{{items.product_name}}" width="100px" height="100px"> </td>
-      {% else %}
-      <td>Not found</td>
-      {% endif %}
-      <td>{{items.description}}</td>
-      <td>{{items.price}}</td>
-      <td>{{items.category.category_name}}</td>
-      <td><a href="{% url 'update_product' items.id  %}" class="btn btn-primary">Edit</a>
-        <a href="{% url 'delete-product' items.id %}" class="btn btn-danger">Delete</a></td>
+<div class="container-fluid m-xl-2">
+  <h1 class="text-center text-muted mt-4">All Products</h1>
 
-    </tr>
-    {% endfor%}
-  </tbody>
-</table>
-         <!-- table end -->
-   
-    </div>
+  {% for msg in messages %}
+    {% if msg.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
+      <div class="alert alert-success">{{ msg }}</div>
+    {% endif %}
+  {% endfor %}
+
+  <!-- Table Start -->
+  <div class="table-responsive mt-4">
+    <table class="table table-hover align-middle shadow-sm">
+
+      <thead class="table-dark">
+        <tr>
+          <th>Product Name</th>
+          <th>Image</th>
+          <th>Description</th>
+          <th>Price</th>
+          <th>Category</th>
+          <th class="text-center">Actions</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        {% for items in products %}
+        <tr>
+          <td>{{ items.product_name }}</td>
+
+          <td>
+            {% if items.image %}
+              <img src="{{ items.image.url }}" width="90" height="90" class="rounded shadow-sm" alt="{{ items.product_name }}">
+            {% else %}
+              <span class="text-muted small">Not found</span>
+            {% endif %}
+          </td>
+
+          <td style="max-width: 250px;">
+            <span class="text-muted small">{{ items.description }}</span>
+          </td>
+
+          <td>Rs {{ items.price }}</td>
+          <td>{{ items.category.category_name }}</td>
+
+          <td class="text-center">
+            <a href="{% url 'update_product' items.id %}" class="btn btn-sm btn-primary me-1">
+              <i class="bi bi-pencil-square"></i> Edit
+            </a>
+            <a href="{% url 'delete-product' items.id %}" class="btn btn-sm btn-danger">
+              <i class="bi bi-trash"></i> Delete
+            </a>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+
+    </table>
+  </div>
+  <!-- Table End -->
+
+</div>
 {% endblock %}

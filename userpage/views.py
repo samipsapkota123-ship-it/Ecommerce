@@ -5,6 +5,11 @@ from userpage.models import Cart,Order
 from django.contrib import messages
 from django.urls import reverse
 from .forms import OrderForm
+from django.views import View
+import uuid
+from .esewa_signature import genSha256
+
+
 def home_page(request):
     products= Product.objects.all().order_by("-created_at")[:8]
     return render(request,"userpage/homepage.html",{ 'products':products})
@@ -78,12 +83,12 @@ def order_now(request,cart_id,product_id):
         )
 
         if order.payment_method == "cash":
-          cart.delete()
-          return redirect('show_cart_items')
+            cart.delete()
+            return redirect('show_cart_items')
     
     
-        elif order.payment_method == "esewa":
-          pass
+        elif order.payment_method == "esew":
+            return redirect(reverse("esewa_form")+"?o_id="+str(order.id)+"&c_id="+str(cart.id))
 
     
 
@@ -101,4 +106,35 @@ def order_history(request):
    return render(request,"userpage/order_history.html",{
       'orders':orders
    })
+   
+
+class EsewaView(View):
+   
+   def get(self,request,*args,**kwargs):
+      o_id= request.GET.get('o_id')
+      c_id= request.GET.get('c_id')
+      cart= Cart.objects.get(id=c_id)
+      order= Order.objects.get(id=o_id)
+
+      uuid_val = uuid.uuid4()
+
+      secret_key= '8gBm/:&EnhH.1/q'
+      data_to_sign = f"total_amount={order.total_price},transaction_uuid={uuid_val},product_code=EPAYTEST"
+
+      result = genSha256(secret_key,data_to_sign)
+
+      data={
+         'amount':order.product.price,
+         'total_amount':order.total_price,
+         'transaction_uuid':uuid_val,
+         'product_code':'EPAYTEST',
+         'signature':result
+      }
+
+      return render(request,"userpage/esewaform.html",{
+         'order':order,
+         'cart':cart,
+         'data':data
+      })
+
    

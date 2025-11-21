@@ -1,0 +1,81 @@
+{% extends 'base.html' %} 
+{% block title %} Order History {% endblock %}
+
+{% block content %}
+<div class="container-fluid m-xl-2">
+  <h5 class="text-center text-muted mt-4">Order History</h5>
+
+  <!-- table start -->
+  <table class="table table-striped ">
+    <thead class="table-dark">
+      <tr>
+        <th>Username</th>
+        <th>Product Name</th>
+        <th>Product Image</th>
+        <th>Quantity</th>
+        <th>Price</th>
+        <th>Total Price</th>
+        <th>Payment Status</th>
+        <th>Order Status</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for items in orders %}
+      <tr>
+        <td>{{items.user.username}}</td>
+        <td>{{items.product.product_name}}</td>
+        <td>
+          <img src="{{items.product.image.url}}" alt="{{items.product_name}}" width="100" height="100" />
+        </td>
+        <td>{{items.quantity}}</td>
+        <td>Rs {{items.product.price}}</td>
+        <td>Rs {{items.total_price}}</td>
+
+        <!-- Payment Status -->
+        <td>
+          <span class="badge rounded-pill {% if items.payment_status == 'pending' %} text-bg-warning {% else %} text-bg-success {% endif %}">
+            {% if items.payment_status == 'pending' %}
+              <i class="bi bi-clock me-1"></i>
+            {% else %}
+              <i class="bi bi-check-circle me-1"></i>
+            {% endif %}
+            {{ items.payment_status|title }}
+          </span>
+        </td>
+
+        <!-- Order Status -->
+        <td>
+          <span class="badge rounded-pill 
+            {% if items.order_status == 'pending' %} text-bg-warning
+            {% elif items.order_status == 'cancelled' %} text-bg-danger
+            {% elif items.order_status == 'delivered' %} text-bg-success
+            {% else %} text-bg-secondary
+            {% endif %}">
+            {% if items.order_status == 'pending' %}
+              <i class="bi bi-hourglass-split me-1"></i>
+            {% elif items.order_status == 'cancelled' %}
+              <i class="bi bi-x-circle me-1"></i>
+            {% elif items.order_status == 'delivered' %}
+              <i class="bi bi-truck me-1"></i>
+            {% endif %}
+            {{ items.order_status|title }}
+          </span>
+        </td>
+
+        <!-- Actions -->
+        <td>
+          {% if items.order_status != 'delivered' and items.order_status != 'cancelled' %}
+            <a href="{% url 'update_order_status' items.id 'delivered' %}" class="btn btn-success btn-sm mb-1">Mark as Delivered</a>
+            <a href="{% url 'update_order_status' items.id 'cancel' %}" class="btn btn-danger btn-sm">Cancel</a>
+          {% else %}
+            <span class="text-muted">No actions</span>
+          {% endif %}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <!-- table end -->
+</div>
+{% endblock %}
